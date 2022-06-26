@@ -1,0 +1,15 @@
+{
+  "name": "react-cargo",
+  "version": "1.0.0",
+  "description": "React-cargo : A state management library for React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "state-management"
+  ],
+  "author": "Samudra Deka",
+  "license": "ISC"
+}

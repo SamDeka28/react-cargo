@@ -1,0 +1,27 @@
+{
+  "name": "react-cargo",
+  "version": "1.0.0",
+  "description": "React-cargo : A state management library for React",
+  "main": "./lib/index.js",
+  "files": [
+    "/lib/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [
+    "react",
+    "state-management"
+  ],
+  "author": "Samudra Deka",
+  "license": "ISC",
+  "devDependencies": {
+    "react": "^18.2.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@types/events": "^3.0.0",
+    "@types/react": "^18.0.14"
+  }
+}

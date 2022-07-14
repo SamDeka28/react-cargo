@@ -17,11 +17,9 @@
   "author": "Samudra Deka",
   "license": "ISC",
   "devDependencies": {
-    "react": "^18.2.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@types/events": "^3.0.0",
-    "@types/react": "^18.0.14"
+    "@types/events": "^3.0.0"
   }
 }

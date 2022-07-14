@@ -30,7 +30,7 @@ yarn add react-cargo
 
 ## Creating a store
 
-Create a store is as easy as calling a function with some argument. Using `addState`, you can create a `StateInstance`, which takes an object with a key and a default state
+Create a store is as easy as calling a function with some argument. Using `createStore`, you can create a `StateInstance`, which takes an object with a key and a default state
 
 > `key` : should be unique accross the application
 
@@ -342,3 +342,76 @@ function createStore<T>({ key, state, }: {
 
 - key :  A unique string used to identify a stateInstance internally.
 - state : The initial value of the stateInstance
+<br><br>
+## Creating Custom State Handlers
+
+When creating a store using `createStore`, it returns a `getter` ( `get` ) and `setter` ( `set` ). This can be used to create custom handler to manipulate state which can be used to seperate concerns from a components. The idea is to separate state logic from a component.
+
+For example : 
+
+counter.cargo.js
+```
+  import { createStore } from 'react-cargo';
+
+  export const counterState = createStore({
+    key : 'counter',
+    state : {
+      counter :  0
+    }
+  });
+
+
+  export const handleIncrement = ()=> {
+    let { counter } = counterState.get();
+
+    counterState.set({ counter : counter + 1});
+  }
+
+  export const handleDecrement = ()=> {
+     let { counter } = counterState.get();
+
+    counterState.set({ counter : counter - 1});
+  }
+```
+
+This can be used in a component as : 
+
+App.js
+```
+import { counterState, handleIncrement, handleDecrement } from './counter.cargo.js';
+
+export function App() {
+  return (
+    <div className="App">
+        <CountView />
+        <Actions />
+    </div>
+  );
+}
+
+function CountView() {
+  let [state] = useSelector(counterState,  { counter: true });
+  return <p>{state.counter}</p>;
+}
+
+function Actions() {
+  return (
+    <p>
+        <button
+          type="button"
+          style={{ width: 50 }}
+          onClick={handleIncrement}
+        >
+          +
+        </button>
+        <button
+          type="button"
+          style={{ width: 50 }}
+          onClick={handleDecrement}
+        >
+          -
+        </button>
+    </p>
+  );
+}
+```

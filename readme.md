@@ -18,7 +18,7 @@ yarn add react-cargo
 
 ## List of hooks
 
-- [useStore](#useStore)
+- useStore
 - useStoreValue
 - useStoreSetter
 - useSelector
@@ -30,7 +30,7 @@ yarn add react-cargo
 
 ## Creating a store
 
-Create a store is as easy as calling a function with some argument. Using `createStore`, you can create a `StateInstance`, which takes an object with a key and a default state
+Creating a store is as easy as calling a function with some argument. Using `createStore`, you can create a `StateInstance`, which takes an object with a key and a default state
 
 > `key` : should be unique accross the application
 

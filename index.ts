@@ -74,7 +74,6 @@ class CargoStore<T> implements StoreInstance<T> {
     for (const listener of listeners) {
       this.events.on(listener, function (state: T) {
         if (typeof state == "object") state = JSON.parse(JSON.stringify(state));
-        console.log(JSON.stringify(state));
         setState(state);
       });
     }
@@ -244,7 +243,7 @@ export function useStoreValue<T>(stateInstance: StoreInstance<T>): T {
  */
 export function useStoreSetter<T>(
   stateInstance: StoreInstance<T>
-): Dispatch<T> {
+): Dispatch<{ [key in keyof T]?: any } {
   let setState = InitHook();
 
   useEffect(() => {

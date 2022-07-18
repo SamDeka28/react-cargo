@@ -243,7 +243,7 @@ export function useStoreValue<T>(stateInstance: StoreInstance<T>): T {
  */
 export function useStoreSetter<T>(
   stateInstance: StoreInstance<T>
-): Dispatch<{ [key in keyof T]?: any } {
+): Dispatch<{ [key in keyof T]?: any }> {
   let setState = InitHook();
 
   useEffect(() => {

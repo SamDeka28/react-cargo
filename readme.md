@@ -345,7 +345,7 @@ function createStore<T>({ key, state, }: {
 <br><br>
 ## Creating Custom State Handlers
 
-When creating a store using `createStore`, it returns a `getter` ( `get` ) and `setter` ( `set` ). This can be used to create a custom handler to manipulate state which can be used to seperate concerns from components. The idea is to separate state logic from a component.
+When creating a store using `createStore`, it returns a `getter` ( `get` ) and `setter` ( `set` ). This can be used to create a custom handler to manipulate state which can be used to seperate concerns from components. The idea is to separate state logic from a component. However, it should be noted that `get` doesn't subscribe to any state change, it returns the latest store values only when called.
 
 For example : 
 

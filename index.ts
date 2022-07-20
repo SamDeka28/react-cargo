@@ -12,7 +12,7 @@ interface StoreInstance<T> {
     setState: React.Dispatch<React.SetStateAction<T>>,
     listeners: string[]
   ) => void;
-  get: (cargoStore?: StoreInstance<T>) => T;
+  get: () => T;
   set: (state: { [key in keyof T]?: any } | T, listeners?: string[]) => void;
 }
 
@@ -33,9 +33,8 @@ class CargoStore<T> implements StoreInstance<T> {
     this.events = new EventEmitter();
   }
 
-  public get(cargoStore?: StoreInstance<T>) {
-    if (cargoStore) return cargoStore.get();
-    return this.state;
+  public get() {
+    return JSON.parse(JSON.stringify(this.state));
   }
 
   public set(state: { [key in keyof T]?: any } | T, listeners?: string[]) {

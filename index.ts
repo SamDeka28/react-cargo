@@ -401,47 +401,21 @@ export function createStore<T>({
   return new CargoStore<T>(key, state);
 }
 
-function collateState(
-  stateSlice: { [x: string]: any },
-  nextState: any,
-  appendableState: { [x: string | number]: any }
-) {
-  if (Array.isArray(nextState)) {
-    spreadArray(appendableState, nextState);
-  } else {
-    for (const key in stateSlice) {
-      if (Object.hasOwnProperty.call(stateSlice, key)) {
-        const value = stateSlice[key];
-        if (typeof value == "object") {
-          if (Array.isArray(nextState[key])) {
-            spreadArray(appendableState[key], nextState[key]);
-          }
-          collateState(value, nextState[key], appendableState?.[key]);
-        } else {
-          if (value !== false && appendableState.hasOwnProperty(key)) {
-            nextState[key] = appendableState?.[key];
-          }
-        }
+
+function collateState(original, state, appendable) {
+  for (const key in appendable) {
+    if (Object.hasOwnProperty.call(appendable, key)) {
+      const element = appendable[key]; 
+      if (typeof state[key] == "object") {
+         collateState(original, state[key], appendable[key]);
+         continue;
       }
+      state[key] = element;
     }
   }
-  return nextState;
+  return original;
 }
 
-function spreadArray(appendable: { [x: number]: any }, nextState: any[]): any {
-  for (let key in appendable) {
-    if (parseInt(key) > nextState.length)
-      nextState.splice(parseInt(key), 0, appendable[key]);
-    if (Object.hasOwnProperty.call(appendable, key)) {
-      let value = appendable[key];
-      if (typeof value == "object" && Array.isArray(nextState[key])) {
-        return spreadArray(value, nextState[key]);
-      }
-      nextState.splice(parseInt(key), 1, value);
-    }
-  }
-  return nextState;
-}
 
 /**
  * @method makeUniqueKeys

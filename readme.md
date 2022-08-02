@@ -1,18 +1,20 @@
 # React-cargo
 
+[![npm version](https://badge.fury.io/js/react-cargo.svg)](https://badge.fury.io/js/react-cargo) [![npm](https://img.shields.io/npm/dt/react-cargo.svg)](https://www.npmjs.com/package/react-cargo) [![NpmLicense](https://img.shields.io/npm/l/react-cargo.svg?registry_uri=https%3A%2F%2Fregistry.npmjs.com)](https://www.npmjs.com/package/react-cargo)
+
 `react-cargo` is a minimal state management tool for React with managed updates on state transition. `react-cargo` is easy to setup, just install and you are ready to add global state to your application without the need of writing any boilerplate code. `react-cargo` exposes easy to use hook based api's.
 
 ## Installation
 
 To install the stable version of `react-cargo`
 
-```
+```bash
 npm install react-cargo
 ```
 
 or
 
-```
+```bash
 yarn add react-cargo
 ```
 
@@ -36,7 +38,7 @@ Creating a store is as easy as calling a function with some argument. Using `cre
 
 > `state` : can take in Primitive as well as Non-primitive data types
 
-```
+```js
 import {createStore} from "react-cargo";
 
 export const counter = createStore({
@@ -49,7 +51,7 @@ export const counter = createStore({
 
 We can use `useStore`, `useStoreValue`,`useStoreSetter` or `useSelector` to use a state in our component.
 
-```
+```js
 import {createStore} from "react-cargo";
 
 const counter = createStore({
@@ -85,7 +87,7 @@ function Actions(){
 ### useStore : 
 Returns a tuple where the first element is the value of state and the second element is a setter function that will update the value of the given state when called.
 <br><br>
-```
+```js
  function useStore<T>(stateInstance: StoreInstance<T>):[T, Dispatch<{ [key in keyof T]?: any }>]
 ```
 
@@ -98,7 +100,7 @@ Returns a tuple where the first element is the value of state and the second ele
 
 ### **Example**
 
-```
+```js
 import { useStore, createStore} from 'react-cargo';
 
 let counterState = createStore({
@@ -123,7 +125,7 @@ function Counter(){
 ```
 ### useStoreValue
 Returns the value of the given `stateInstance`.
-```
+```js
  function useStoreValue<T>(stateInstance: StoreInstance<T>): T;
 ```
 
@@ -136,7 +138,7 @@ Returns the value of the given `stateInstance`.
 
 ### **Example**
 
-```
+```js
   import { useStoreSetter, useStoreValue, createStore} from 'react-cargo';
  
   let nameStore = createStore({
@@ -174,7 +176,7 @@ Returns the value of the given `stateInstance`.
 ### useStoreSetter : 
 Returns a setter to set the state of a provided `stateInstance`
 <br><br>
-```
+```js
   function useStoreSetter<T>(stateInstance: StoreInstance<T>): Dispatch<T>;
 ```
 
@@ -183,7 +185,7 @@ Returns a setter to set the state of a provided `stateInstance`
 
 ### **Example**
 
-```
+```js
 import { useStoreSetter, useStoreValue, createStore} from 'react-cargo';
 
  let nameStore = createStore({
@@ -223,7 +225,7 @@ import { useStoreSetter, useStoreValue, createStore} from 'react-cargo';
 ### useResetStore : 
 Returns a resetter function to reset the state of a provided `stateInstance` to its initial state
 <br><br>
-```
+```js
   function useResetStore<T>(stateInstance: StoreInstance<T>): () => void;
 ```
 
@@ -232,7 +234,7 @@ Returns a resetter function to reset the state of a provided `stateInstance` to 
 
 ### **Example**
 
-```
+```js
   import { useStore, useStoreValue, createStore, useResetStore} from 'react-cargo';
  
   let counterState = createStore({
@@ -276,23 +278,23 @@ Returns a resetter function to reset the state of a provided `stateInstance` to 
 ```
 
 ### useSelector : 
-Returns a tuple where the first element is the value of state and the second element is a setter function that will update the value of the given state when called. Using `useSelector`, components can subscribe to specific updates in a Non-primitive stateInstance. 
+Returns a tuple where the first element is the value of state and the second element is a setter function that will update the value of the given state when called. Using `useSelector`, components can subscribe to specific updates in a Non-primitive stateInstance. Note that a `useSelector` will listen to all updates on the store regardless of the `selector` (subscribed slice of the state) provided if the `setter` function was called on the same component as the `useSelector`.
 <br><br>
 
 > This hook can only be used with non-primitive state values
 
-```
+```js
   function useSelector<T>(stateInstance: StoreInstance<T>, selector: {[key in keyof T]?: any;})
   : [T, Dispatch<{key in keyof T]?: any;} | T>];
 ```
 
 - stateInstance : an instance returned by `createStore`
-- selector : A map representing the state structure with boolean values. By default every key is set to false until specified. If the value of a key is true, the component automically subscribe to the selective update.
+- selector : A map representing the state structure with boolean values. By default every key is set to false until specified. If the value of a key is true, the component automatically subscribe to the selective update.
 <br><br>
 
 ### **Example**
 
-```
+```js
   import { useSelector, createStore} from 'react-cargo';
  
   let counterState = createStore({key :'counter',state : {counter : 0}});
@@ -333,7 +335,7 @@ Returns a tuple where the first element is the value of state and the second ele
 ### createStore :
 Create a  new `stateInstance`
 
-```
+```js
 function createStore<T>({ key, state, }: {
     key: string;
     state: T;
@@ -350,7 +352,7 @@ When creating a store using `createStore`, it returns a `getter` ( `get` ) and `
 For example : 
 
 counter.cargo.js
-```
+```js
   import { createStore } from 'react-cargo';
 
   export const counterState = createStore({
@@ -377,7 +379,7 @@ counter.cargo.js
 This can be used in a component as : 
 
 App.js
-```
+```js
 import { counterState, handleIncrement, handleDecrement } from './counter.cargo.js';
 
 export function App() {
@@ -415,3 +417,7 @@ function Actions() {
   );
 }
 ```
+
+
+### LICENSE 
+Licensed under **ISC**

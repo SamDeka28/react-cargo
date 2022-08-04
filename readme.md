@@ -88,7 +88,7 @@ function Actions(){
 Returns a tuple where the first element is the value of state and the second element is a setter function that will update the value of the given state when called.
 <br><br>
 ```js
- function useStore<T>(stateInstance: StoreInstance<T>):[T, Dispatch<{ [key in keyof T]?: any }>]
+ function useStore<T>(stateInstance: StoreInstance<T>):[T, Dispatch<T>]
 ```
 
 - stateInstance : an instance returned by `createStore`
@@ -111,7 +111,9 @@ let counterState = createStore({
 function Counter(){
     let [count,setCounter] = useStore(counterState);
     
-    let increment = ()=> setCounter(count + 1);
+    //setter syntax 1
+    let increment = ()=> setCounter(prevState=>prevState + 1);
+    //setter syntax 2
     let decrement = ()=> setCounter(count - 1);
 
     return (
@@ -142,7 +144,7 @@ Returns the value of the given `stateInstance`.
   import { useStoreSetter, useStoreValue, createStore} from 'react-cargo';
  
   let nameStore = createStore({
-    key :'counter',
+    key :'storedemo',
     state : ''
   });
  
@@ -189,7 +191,7 @@ Returns a setter to set the state of a provided `stateInstance`
 import { useStoreSetter, useStoreValue, createStore} from 'react-cargo';
 
  let nameStore = createStore({
-    key :'counter',
+    key :'storedemo',
     state : ''
  });
 
@@ -284,8 +286,8 @@ Returns a tuple where the first element is the value of state and the second ele
 > This hook can only be used with non-primitive state values
 
 ```js
-  function useSelector<T>(stateInstance: StoreInstance<T>, selector: {[key in keyof T]?: any;})
-  : [T, Dispatch<{key in keyof T]?: any;} | T>];
+  function useSelector<T>(stateInstance: StoreInstance<T>, selector: SelectorType<T>)
+  : [T, Dispatch<T>];
 ```
 
 - stateInstance : an instance returned by `createStore`
@@ -299,9 +301,7 @@ Returns a tuple where the first element is the value of state and the second ele
  
   let counterState = createStore({key :'counter',state : {counter : 0}});
  
-  function Counter(){
-    let setCounter = useStoreSetter(counterState);
- 
+  function Counter(){ 
     return (
        <>
           <ViewCount/>
@@ -362,13 +362,11 @@ counter.cargo.js
     }
   });
 
-
+  //setter syntax 1 - with prevState
   export const handleIncrement = ()=> {
-    let { counter } = counterState.get();
-
-    counterState.set({ counter : counter + 1});
+    counterState.set(prevState=>({ counter : prevState.counter + 1}));
   }
-
+  //setter syntax 2 - without prevState
   export const handleDecrement = ()=> {
      let { counter } = counterState.get();
 

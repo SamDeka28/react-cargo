@@ -1,6 +1,14 @@
 import { EventEmitter } from "events";
 import { useEffect, useState } from "react";
 
+type Partial<T> = {
+  [P in keyof T]?: Partial<T[P]>;
+};
+
+type SelectorType<T> = {
+  [P in keyof T]?: T[P] extends object ? SelectorType<T[P]> : boolean;
+};
+
 interface StoreInstance<T> {
   key: string;
   state: T;
@@ -13,10 +21,13 @@ interface StoreInstance<T> {
     listeners: string[]
   ) => void;
   get: () => T;
-  set: (state: { [key in keyof T]?: any } | T, listeners?: string[]) => void;
+  set: (
+    state: Partial<T> | ((prevState: T) => Partial<T>),
+    listeners?: string[]
+  ) => void;
 }
 
-class CargoStore<T> implements StoreInstance<T> {
+class CargoStore<T> {
   key: string;
   state: T;
   default: T;
@@ -37,8 +48,15 @@ class CargoStore<T> implements StoreInstance<T> {
     return JSON.parse(JSON.stringify(this.state));
   }
 
-  public set(state: { [key in keyof T]?: any } | T, listeners?: string[]) {
+  public set(
+    state: Partial<T> | ((prevState: T) => Partial<T>),
+    listeners?: string[]
+  ) {
     let isNonPrimitiveState = typeof this.state === "object";
+    /**If state provided as a callback function, call the function and extract the state */
+    if (typeof state === "function") {
+      state = state(this.state);
+    }
     let nextState = isNonPrimitiveState
       ? collateState(this.state, this.state, state)
       : state;
@@ -86,7 +104,7 @@ class CargoStore<T> implements StoreInstance<T> {
 }
 
 interface Dispatch<T> {
-  (state: T): void;
+  (state: Partial<T> | ((prevState: T) => Partial<T>)): void;
 }
 
 function InitHook<T>() {
@@ -122,9 +140,7 @@ function InitHook<T>() {
  * @param {*} StateInstance
  * @returns
  */
-export function useStore<T>(
-  stateInstance: StoreInstance<T>
-): [T, Dispatch<{ [key in keyof T]?: any }>] {
+export function useStore<T>(stateInstance: StoreInstance<T>): [T, Dispatch<T>] {
   let setState = InitHook();
 
   useEffect(() => {
@@ -242,7 +258,7 @@ export function useStoreValue<T>(stateInstance: StoreInstance<T>): T {
  */
 export function useStoreSetter<T>(
   stateInstance: StoreInstance<T>
-): Dispatch<{ [key in keyof T]?: any }> {
+): Dispatch<T> {
   let setState = InitHook();
 
   useEffect(() => {
@@ -313,7 +329,6 @@ export function useResetStore<T>(stateInstance: StoreInstance<T>): () => void {
   };
 }
 
-
 /**
  * Use `useSelector` to opt into selective state dispatch. The selector function
  * should return a patial representation of the original state object with key that
@@ -361,8 +376,8 @@ export function useResetStore<T>(stateInstance: StoreInstance<T>): () => void {
  */
 export function useSelector<T>(
   stateInstance: StoreInstance<T>,
-  selector: { [key in keyof T]?: any }
-): [T, Dispatch<{ [key in keyof T]?: any } | T>] {
+  selector: SelectorType<T>
+): [T, Dispatch<T>] {
   if (typeof stateInstance !== "object")
     throw new Error("useSelector can only be used with non-primitive states");
 
@@ -401,21 +416,19 @@ export function createStore<T>({
   return new CargoStore<T>(key, state);
 }
 
-
-function collateState(original, state, appendable) {
+function collateState(original: any, state: any, appendable: any) {
   for (const key in appendable) {
     if (Object.hasOwnProperty.call(appendable, key)) {
-      const element = appendable[key]; 
+      const element = appendable[key];
       if (typeof state[key] == "object") {
-         collateState(original, state[key], appendable[key]);
-         continue;
+        collateState(original, state[key], appendable[key]);
+        continue;
       }
       state[key] = element;
     }
   }
   return original;
 }
-
 
 /**
  * @method makeUniqueKeys

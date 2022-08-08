@@ -446,7 +446,7 @@ function makeUniqueKeys(
 ): string[] {
   if (typeof data !== "object") return [];
   for (const key of Object.keys(data)) {
-    if (typeof data[key] == "object") {
+    if (typeof data[key] == "object" && data[key] !== null) {
       parentkey.push(key);
       makeUniqueKeys(data[key], parentkey, accumulator);
     } else {

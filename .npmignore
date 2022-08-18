@@ -1,2 +1,5 @@
 index.ts
 tsconfig.json
+.github
+.scannerwork
+.vscode
